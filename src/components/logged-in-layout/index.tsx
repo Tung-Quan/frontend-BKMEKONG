@@ -7,8 +7,8 @@ import { useUserStore } from '@/stores';
 
 import Footer from './footer';
 import Header from './header';
-import SidebarDesktop from './sidebar-desktop';
-import SidebarMobile from './sidebar-mobile';
+// import SidebarDesktop from './sidebar-desktop';
+// import SidebarMobile from './sidebar-mobile';
 
 type LoggedInProps = {
   children: ReactNode;
@@ -33,7 +33,7 @@ const LoggedInLayout = ({ children }: LoggedInProps) => {
     <>
       <div className="relative flex min-h-screen w-screen min-w-[360px] flex-row bg-white">
         <ScrollToTop />
-        <SidebarMobile
+        {/* <SidebarMobile
           isManager={user?.isManager}
           opened={sidebarMobileOpened}
           close={() => setSidebarMobileOpened(false)}
@@ -41,7 +41,7 @@ const LoggedInLayout = ({ children }: LoggedInProps) => {
         <SidebarDesktop
           isManager={user?.isManager}
           opened={sidebarDesktopOpened}
-        />
+        /> */}
         <div className="relative flex min-h-screen w-full min-w-0 flex-col bg-white">
           <Header
             user={user}

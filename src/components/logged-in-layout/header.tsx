@@ -9,14 +9,14 @@ import {
   SidebarToggleIcon,
   SignOut,
 } from '@/components/icons';
-import ChatPopup from '@/components/logged-in-layout/chat-popup';
-import NotificationPopup, { subscribeNotifications, getNotificationsStore } from '@/components/logged-in-layout/notification-popup';
+import { subscribeNotifications, getNotificationsStore } from '@/components/logged-in-layout/notification-popup';
 // import vndFormat from '@/helpers/currency-format';
 import handleAxiosError from '@/helpers/handle-axios-error';
 import { useAuthStore } from '@/stores';
 // import { useUserStore } from '@/stores';
 import { User } from '@/types';
 import storage from '@/utils/storage';
+
 
 type HeaderProps = {
   user: User | null;
@@ -36,7 +36,6 @@ const Header = ({
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [notificationOpened, setNotificationOpened] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
-  const [chatOpened, setChatOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -96,28 +95,12 @@ const Header = ({
       <div className="flex flex-1" />
       {isAuthenticated ? (
         <>
-          {/* Sticky chat activator (provided SVG) */}
-          {!chatOpened && (
-            <button
-              title="Chat"
-              onClick={() => setChatOpened(true)}
-              className="fixed right-0 top-20 z-[97] p-2 focus:outline-none"
-              aria-label="Open chat"
-            >
-              <svg width="52" height="40" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 0.5H79.5V39.5H20C9.23045 39.5 0.5 30.7696 0.5 20C0.5 9.23045 9.23045 0.5 20 0.5Z" fill="white" stroke="#3D4863" />
-                <path d="M37 14H35V23H22V25C22 25.55 22.45 26 23 26H34L38 30V15C38 14.45 37.55 14 37 14ZM33 20V11C33 10.45 32.55 10 32 10H19C18.45 10 18 10.45 18 11V25L22 21H32C32.55 21 33 20.55 33 20Z" fill="#595959" />
-              </svg>
-            </button>
-          )}
-          {/* Notification/Chat Icon */}
           <div
             className="relative mr-4 flex size-10 cursor-pointer items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#0329E9]"
             onClick={() => setNotificationOpened(!notificationOpened)}
             title="Notifications"
           >
             <NotificationIcon className="size-6" />
-            {/* Badge for unread notifications (optional) */}
             {unreadCount > 0 && (
               <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
                 {unreadCount}
@@ -187,10 +170,7 @@ const Header = ({
         </Link>
       )}
 
-      {/* Notification Popup */}
-      <NotificationPopup isOpen={notificationOpened} onClose={() => setNotificationOpened(false)} />
-      {/* Chat Popup (activated by sticky SVG button) */}
-      <ChatPopup isOpen={chatOpened} onClose={() => setChatOpened(false)} />
+
     </div>
   );
 };
