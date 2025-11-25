@@ -1,21 +1,14 @@
-import { Link, useNavigate } from '@tanstack/react-router';
-import { useState, useEffect } from 'react';
+import { Link, useMatches, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-import {
-  Next,
-  NotificationIcon,
-  ProfileIcon,
-  SidebarToggleIcon,
-  SignOut,
-} from '@/components/icons';
-import { subscribeNotifications, getNotificationsStore } from '@/components/logged-in-layout/notification-popup';
-// import vndFormat from '@/helpers/currency-format';
 import handleAxiosError from '@/helpers/handle-axios-error';
 import { useAuthStore } from '@/stores';
-// import { useUserStore } from '@/stores';
 import { User } from '@/types';
 import storage from '@/utils/storage';
+
+import UserBanner from './user-banner';
+
 
 
 type HeaderProps = {
@@ -33,28 +26,13 @@ const Header = ({
 }: HeaderProps) => {
   const { logout: authLogout, isAuthenticated } = useAuthStore();
 
-  const [dropdownOpened, setDropdownOpened] = useState(false);
-  const [notificationOpened, setNotificationOpened] = useState(false);
-  const [unreadCount, setUnreadCount] = useState<number>(0);
+  // const [dropdownOpened, setDropdownOpened] = useState(false);
   const [loading, setLoading] = useState(false);
+  const matches = useMatches();
   const navigate = useNavigate();
 
-  // subscribe to notification store so badge count stays in sync
-  useEffect(() => {
-    try {
-      // initialize
-      const init = getNotificationsStore();
-      setUnreadCount(init.filter((i) => !i.isRead).length);
-      const unsub = subscribeNotifications((items: any[]) => {
-        setUnreadCount(items.filter((i) => !i.isRead).length);
-      });
-      return () => unsub();
-    } catch {
-      // ignore subscription errors
-      return () => { };
-    }
-  }, []);
-
+  const isHomePage = true;
+  const isWorkingPage = matches.some(match => match.pathname === '/working');
   const logout = async () => {
     try {
       setLoading(true);
@@ -78,100 +56,126 @@ const Header = ({
       setLoading(false);
     }
   };
+  if (loading) {
+    return (
+      <div
+        id="study-layout-header"
+        // className="border-tertiary-300 3xl:h-24 3xl:px-10 sticky top-0 z-[98] flex h-20 w-full flex-row items-center border-b border-solid bg-white p-5"
+        className='z-50 border-b backdrop-blur-lg'
+      >
+        <div className="max-w-7xl">
+          <div className="navbar min-h-14 justify-between px-4">
+            <span>Loading...</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
-      id="study-layout-header"
-      className="sticky top-0 z-[98] flex h-20 w-full flex-row items-center border-b border-solid border-tertiary-300 bg-white p-5 shadow-for-header 3xl:h-24 3xl:px-10"
+      id="logged-in-layout-header"
+      // className="border-tertiary-300 3xl:h-24 3xl:px-10 sticky top-0 z-[98] flex h-20 w-full flex-row items-center border-b border-solid bg-white p-5"
+      className='z-50 w-full border-b p-4 backdrop-blur-lg'
     >
-      <SidebarToggleIcon
+      {/* <SidebarToggleIcon
         onClick={toggleSidebarMobile}
         className="relative flex size-8 cursor-pointer fill-tertiary xl:hidden"
       />
       <SidebarToggleIcon
         onClick={toggleSidebarDesktop}
         className="relative hidden size-8 cursor-pointer fill-tertiary xl:flex"
-      />
-      <div className="flex flex-1" />
-      {isAuthenticated ? (
-        <>
-          <div
-            className="relative mr-4 flex size-10 cursor-pointer items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#0329E9]"
-            onClick={() => setNotificationOpened(!notificationOpened)}
-            title="Notifications"
-          >
-            <NotificationIcon className="size-6" />
-            {unreadCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-                {unreadCount}
-              </span>
-            )}
-          </div>
+      /> */}
+      <div className="navbar flex min-h-14 justify-between px-4">
+        {/* LOGO */}
+        <div className="flex-1 lg:flex-none">
+          <Link to="/" className="transition-opacity hover:opacity-80">
+            <div className="flex items-center gap-2">
+              {/* <ShoppingCartIcon className="size-9 text-primary" /> */}
+              <img src="/tien_giang_icon.webp " alt="Logo" className="size-10 object-contain" />
+              <div>
 
-          <div
-            className="relative flex size-10 cursor-pointer items-center justify-center rounded-full border-[0.5px] border-solid border-tertiary p-1 xl:h-12 xl:w-80 xl:justify-between"
-            onClick={() => setDropdownOpened(!dropdownOpened)}
-          >
-            <div className="flex h-full flex-row items-center gap-2">
-              <div
-                style={{ backgroundImage: `url(${user?.picture})` }}
-                className={`${user?.picture ? '' : 'flex items-center justify-center bg-tertiary'} relative size-8 rounded-full bg-cover xl:size-10`}
-              >
-                {user?.picture ? (
-                  <></>
-                ) : (
-                  <ProfileIcon className="size-5 fill-white" />
+                {!isAuthenticated && (
+                  <span
+                    className="font-mono text-xl font-semibold tracking-widest text-[#0060C9]" style={{ fontFamily: 'UTM Black' }}
+                  >
+                    BK MÊKÔNG
+                  </span>
                 )}
-              </div>
-              <div className="relative hidden flex-col justify-center py-2 xl:flex">
-                <span className="select-none text-[14px] font-bold">
-                  {user?.firstName || user?.lastName
-                    ? `${user?.lastName} ${user?.firstName}`
-                    : '[TÊN CHƯA CẬP NHẬT]'}
-                </span>
-                <span className="select-none text-[12px] text-tertiary-300">
-                  {user?.email}
-                </span>
+                {isAuthenticated && (
+                  <span
+                    className="font-mono text-xl font-semibold tracking-widest text-[#069843]" style={{ fontFamily: 'UTM Black' }}
+                  >
+                    CỔNG ĐIỆN TỬ CÔNG TY ABCD
+                  </span>
+                )}
+
+                <div
+                  className={`text-xs opacity-70 ${!isAuthenticated ? 'text-[#0060C9]' : isAuthenticated ? 'text-[#069843]' : 'text-[#003264]'} line-2 hidden max-w-[40rem] md:block`}
+                  style={{ fontFamily: 'SVN Arial, sans-serif' }}
+                >
+                  <span>
+                    Dự án web được thực hiện bởi sinh viên Trường Đại học Bách Khoa TP.HCM (HCMUT), nhằm theo dõi và phân tích tình hình xâm nhập mặn
+                  </span>
+                </div>
+
               </div>
             </div>
-            <Next
-              className={`${dropdownOpened ? 'rotate-180' : ''} mr-4 hidden size-4 fill-tertiary xl:flex`}
-            />
-          </div>
-          <div
-            className={`${dropdownOpened ? 'flex' : 'hidden'} absolute right-5 top-[4.5rem] z-[99] h-28 w-40 flex-col rounded-lg bg-white shadow-[0_8px_16px_0_rgba(0,0,0,0.25)] xl:w-80`}
-          >
-            <Link
-              to="/profile"
-              className="relative flex h-14 w-full flex-row items-center gap-2 rounded-lg px-2 duration-200 ease-in-out hover:bg-tertiary-300"
-            >
-              <ProfileIcon className="relative size-6 fill-tertiary" />
-              <span className="select-none">Hồ sơ cá nhân</span>
-            </Link>
-            <div
-              onClick={async () => {
-                if (loading) return;
-                await logout();
-              }}
-              className="relative flex h-14 w-full cursor-pointer flex-row items-center gap-2 rounded-lg px-2 text-red-600 duration-200 ease-in-out hover:bg-red-300"
-            >
-              <SignOut className="relative size-6" />
-              <span className="select-none">Đăng xuất</span>
+          </Link>
+        </div>
+
+        {/* RIGHT SECTION */}
+        <div className="flex items-center gap-4">
+
+          {!isAuthenticated && (
+            <div className="indicator flex flex-col items-center">
+              {/* CHANGED: Thêm 'hidden md:block' để ẩn text trên màn hình nhỏ */}
+              <div className="hidden rounded-full p-2 text-[#069843] transition-colors md:block" style={{ fontFamily: 'UTM Black' }}>
+                ĐƠN VỊ TÀI TRỢ VÀ HỢP TÁC
+              </div>
+
+              {/* separated sponsor circles placed under the label */}
+              {/* CHANGED: Điều chỉnh margin và gap cho di động */}
+              <div className="flex justify-between gap-2 md:mt-2 md:gap-4" aria-hidden="true">
+                <span className="inline-block size-7 rounded-full bg-[#069843]" />
+                <span className="inline-block size-7 rounded-full bg-[#069843]" />
+                <span className="inline-block size-7 rounded-full bg-[#069843]" />
+                <span className="inline-block size-7 rounded-full bg-[#069843]" />
+              </div>
             </div>
-          </div>
-        </>
-      ) : (
-        <Link
-          to="/login"
-          className="relative flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-xl font-bold text-white duration-200 ease-in-out hover:bg-primary-700 md:px-6 3xl:px-8 3xl:text-2xl"
-        >
-          {' '}
-          Đăng nhập
-        </Link>
-      )}
+          )}
+
+          {isAuthenticated && (
+            <div className="indicator relative flex items-center justify-between">
+              {/* CHANGED: Giảm gap trên di động */}
+              <div className="flex items-center gap-2 md:gap-3" aria-hidden="true">
+
+                {/* CHANGED: Thu nhỏ icon '?' trên di động */}
+                <span className="inline-block size-10 rounded-full border-2 border-solid border-[#0060C9] bg-white md:size-14">
+                  <Link to='/' className="flex size-full items-center justify-center text-2xl font-bold text-[#0060C9] md:text-4xl" style={{ fontFamily: 'UTM Black' }}>?</Link>
+                </span>
+
+                {/* CHANGED: Thu nhỏ icon 'setting' trên di động */}
+                <span className="inline-block size-10 rounded-full border-2 border-solid border-[#0060C9] bg-white md:size-14">
+                  <Link
+                    to='/home' className="flex size-full items-center justify-center text-4xl">
+                    <img src='/setting.png' alt='home icon' className='size-6 object-contain md:size-8' />
+                  </Link>
+                </span>
+              </div>
 
 
+
+              <div className="ml-2 shrink-0 md:ml-4">
+                <UserBanner userName={''} unitInfo={''} avatarSrc={''} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
+
+
   );
 };
 

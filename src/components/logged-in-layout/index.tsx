@@ -5,8 +5,10 @@ import { useUserStore } from '@/stores';
 
 // import CountdownBar from '../countdown-bar';
 
+import Breadcrumbs from './breadcrumbs';
 import Footer from './footer';
 import Header from './header';
+import Subheader from './sub-header';
 // import SidebarDesktop from './sidebar-desktop';
 // import SidebarMobile from './sidebar-mobile';
 
@@ -53,8 +55,10 @@ const LoggedInLayout = ({ children }: LoggedInProps) => {
               setSidebarDesktopOpened(!sidebarDesktopOpened)
             }
           />
+          <Subheader />
+          <Breadcrumbs />
           {/* <CountdownBar /> */}
-          <div className="relative flex flex-col p-5 3xl:p-10">{children}</div>
+          <div className="3xl:p-10 relative flex flex-col p-5">{children}</div>
         </div>
       </div>
       <Footer />

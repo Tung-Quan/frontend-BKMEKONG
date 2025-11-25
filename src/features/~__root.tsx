@@ -7,7 +7,6 @@ type RouterContext = {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
-      <hr />
       <Outlet />
     </>
   ),

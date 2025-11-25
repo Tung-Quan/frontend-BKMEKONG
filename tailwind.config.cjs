@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require('tailwindcss/defaultTheme');
+const daisyui = require('daisyui');
 
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      boxShadow:{
+      boxShadow: {
         'custom-yellow': '4px 4px 0px 0px #F9BA08',
         'for-header': '0px 4px 16px 0px #00000040',
       },
@@ -26,7 +27,6 @@ module.exports = {
         black: '#000000',
 
         // PROJECT THEME
-
         primary: '#0B2878',
         'primary-300': '#6D7EAE',
         'primary-700': '#082060',
@@ -48,8 +48,39 @@ module.exports = {
       },
     },
   },
-  // plugins:{
-  //   require('@tailwindcss/forms'),
-  // },
-  //  [require('tailwind-scrollbar-hide')],
+
+  // DaisyUI configuration
+  daisyui: {
+    styled: true,
+    themes: [
+      {
+        'bk-theme': {
+          primary: '#0B2878',
+          'primary-content': '#ffffff',
+          secondary: '#5C5B51',
+          'secondary-content': '#ffffff',
+          accent: '#F9BA08',
+          neutral: '#FFFFFF',
+          'base-100': '#ffffff',
+          info: '#6D7EAE',
+          success: '#069843',
+          warning: '#F59E0B',
+          error: '#DC2626',
+        },
+      },
+      'light',
+      'dark',
+    ],
+    base: true,
+    utils: true,
+    logs: false,
+    rtl: false,
+    darkTheme: 'dark',
+  },
+
+  plugins: [
+    require('@tailwindcss/forms'),
+    daisyui,
+    // require('tailwind-scrollbar-hide'),
+  ],
 };

@@ -66,6 +66,9 @@ export default [
       tailwindcss: {
         callees: ['clsx', 'cn'],
         config: 'tailwind.config.cjs',
+        whitelist: [
+          'navbar', 'btn', 'card', 'indicator', 'avatar', 'dropdown', 'menu', 'badge', 'tooltip', 'modal', 'input', 'select', 'form', 'btn-primary', 'btn-secondary', 'bg-base-100', 'base-200'
+        ],
       },
     },
     rules: {
